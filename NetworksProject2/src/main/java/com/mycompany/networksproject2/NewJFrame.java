@@ -1,0 +1,332 @@
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package com.mycompany.networksproject2;
+
+import java.io.BufferedOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author 
+ */
+public class NewJFrame extends javax.swing.JFrame {
+
+    /**
+     * Creates new form NewJFrame
+     */
+    public NewJFrame() {
+        initComponents();
+    }
+     String dataStr;
+     private boolean result1 = false;
+    private boolean result2 = false;
+      public void addParameter(String ps, String vs) {
+        if (ps == null || vs == null || ps.length() == 0 || vs.length() == 0) {
+            return;
+        }
+        if (dataStr.length() > 0) {
+            dataStr += "&";
+        }
+        try {
+            dataStr += ps + "=" + URLEncoder.encode(vs, "ASCII");
+        } catch (Exception e) {
+            java.lang.System.out.println(e.toString());
+        }
+    }
+    boolean sendData_POST1() {
+        boolean exceptionOccurred1 = false;
+        dataStr = "";
+        OutputStream os;
+        InputStream is;
+        String ID = this.ID.getText();
+        String password = this.password.getText();
+        addParameter("ID", ID);
+        addParameter("password", password);
+        String URLstring = "http://localhost:8081/server/AuthenticationServlet";
+        
+        try {
+            URL myURL = new URL(URLstring);
+            HttpURLConnection myConn =(HttpURLConnection) myURL.openConnection();
+            myConn.setDoOutput(true);
+            myConn.setDoInput(true);
+            myConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            myConn.setUseCaches(false);
+            BufferedOutputStream out = new BufferedOutputStream(myConn.getOutputStream());
+            out.write(dataStr.getBytes());
+            out.close();
+
+            String SS = "";
+            int b = -1;
+
+            String t = "";
+            is = myConn.getInputStream();
+            while ((b = is.read()) != -1) {
+            
+                    SS = SS + (char) b;
+   
+            }
+            // this.jTextField1.setText(SS);
+             if("Permit".equals(SS))
+            {
+                JOptionPane.showMessageDialog(rootPane,"Permit","",JOptionPane.INFORMATION_MESSAGE);
+//                ClientSNMP obj=new ClientSNMP();
+//                obj.setVisible(true);
+                 exceptionOccurred1 = true;
+                
+            }
+            else {
+                JOptionPane.showMessageDialog(rootPane,"Deny","",JOptionPane.ERROR_MESSAGE);
+                exceptionOccurred1 = false;
+             }
+             
+        } catch (Exception e) {
+            java.lang.System.out.println(e.toString());
+          
+        }
+        return exceptionOccurred1;
+    }
+    
+    
+boolean sendData_POST2() {
+     boolean exceptionOccurred = false;
+    dataStr = "";
+    OutputStream os;
+    InputStream is;
+    String username = this.username.getText();
+    String password = this.password.getText();
+    addParameter("username", username);
+    addParameter("password", password);
+    String URLstring = "http://localhost:8081/server/Authentication.jsp";
+
+    try {
+        URL myURL = new URL(URLstring);
+        HttpURLConnection myConn = (HttpURLConnection) myURL.openConnection();
+        myConn.setDoOutput(true);
+        myConn.setDoInput(true);
+        myConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        myConn.setUseCaches(false);
+
+        BufferedOutputStream out = new BufferedOutputStream(myConn.getOutputStream());
+        out.write(dataStr.getBytes());
+        out.close();
+
+        StringBuilder response = new StringBuilder();
+        int b = -1;
+
+        is = myConn.getInputStream();
+        while ((b = is.read()) != -1) {
+            response.append((char) b);
+        }
+
+        // Remove HTML tags
+        String cleanResponse = response.toString().replaceAll("\\<.*?\\>", "");
+        
+        if ("Permit".equalsIgnoreCase( cleanResponse.trim())) {
+            JOptionPane.showMessageDialog(rootPane, "Permit", "", JOptionPane.INFORMATION_MESSAGE);
+            // Your other code for Permit case
+            exceptionOccurred = true;
+            
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Deny", "", JOptionPane.ERROR_MESSAGE);
+            // Your other code for Deny case
+             exceptionOccurred = false;
+        }
+    } catch (Exception e) {
+        java.lang.System.out.println(e.toString());
+    }
+    return exceptionOccurred;
+}
+/**
+ *
+ * @author Jana
+ */
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        username = new javax.swing.JTextField();
+        ID = new javax.swing.JTextField();
+        password = new javax.swing.JTextField();
+        Verfiy1 = new javax.swing.JButton();
+        Verfiy2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Username");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("ID");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setText("Password");
+
+        Verfiy1.setBackground(new java.awt.Color(255, 102, 0));
+        Verfiy1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Verfiy1.setForeground(new java.awt.Color(255, 255, 255));
+        Verfiy1.setText("Verfiy1 ");
+        Verfiy1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Verfiy1ActionPerformed(evt);
+            }
+        });
+
+        Verfiy2.setBackground(new java.awt.Color(255, 102, 0));
+        Verfiy2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Verfiy2.setForeground(new java.awt.Color(255, 255, 255));
+        Verfiy2.setText("Verfiy2");
+        Verfiy2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Verfiy2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(Verfiy1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(2, 2, 2))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(ID, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(username)
+                            .addComponent(password, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(36, 36, 36))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(Verfiy2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(102, Short.MAX_VALUE))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(25, 25, 25))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(ID, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Verfiy2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Verfiy1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void Verfiy1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Verfiy1ActionPerformed
+        // TODO add your handling code here:
+         result1 = sendData_POST1();
+        checkAndOpenNewFrame();
+        
+    }//GEN-LAST:event_Verfiy1ActionPerformed
+
+    private void Verfiy2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Verfiy2ActionPerformed
+        // TODO add your handling code here:
+         result2 = sendData_POST2();
+        checkAndOpenNewFrame();
+        
+    }//GEN-LAST:event_Verfiy2ActionPerformed
+
+    void checkAndOpenNewFrame() {
+        // Check if both verification results are "Permit"
+        if (result1 && result2) {
+            
+                new NewJFrame_HTTP().setVisible(true);
+            
+        }
+    }
+
+
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new NewJFrame().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField ID;
+    private javax.swing.JButton Verfiy1;
+    private javax.swing.JButton Verfiy2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JTextField password;
+    private javax.swing.JTextField username;
+    // End of variables declaration//GEN-END:variables
+}

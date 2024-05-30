@@ -1,0 +1,264 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package com.mycompany.networksproject2;
+
+/**
+ *
+ * @author 
+ */
+import java.awt.Color;
+import java.awt.Component;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+public class TCP extends javax.swing.JFrame {
+
+    /**
+     * Creates new form TCP
+     */
+    public TCP() {
+        
+        initComponents();
+        super.pack();
+        super.setLocationRelativeTo(null);
+        Color c=new Color(0,0,0);
+        jTable1.getTableHeader().setDefaultRenderer(new TCP.HeaderColor());
+        jTable1.setRowHeight(40);
+        jTable1.setShowGrid(true);
+        jTable1.setGridColor(c);
+        jTable1.setBackground(Color.WHITE);
+        jTable1.setForeground(c);
+
+        sendData_POST();
+        
+    }
+
+    
+   String dataStr = "";
+    String contentStr = "application/x-www-form-urlencoded";
+    String strURLs = "http://127.0.0.1/javap3.php";
+    
+    public void addParameter(String ps, String vs) {
+        if (ps == null || vs == null || ps.length() == 0 || vs.length() == 0) {
+            return;
+        }
+        if (dataStr.length() > 0) {
+            dataStr += "&";
+        }
+        try {
+            dataStr += ps + "=" + URLEncoder.encode(vs, "ASCII");
+        } catch (Exception e) {
+           
+           // System.out.println(e.toString());
+        }
+    }
+    
+    
+     void sendData_POST() {
+        dataStr = "";
+        OutputStream os;
+        InputStream is;
+     
+        DefaultTableModel dtm=new DefaultTableModel(0,0);
+
+        //String urlStr = this.jTextField4.getText();
+        try {
+            URL myURL = new URL(strURLs);
+            URLConnection myConn = myURL.openConnection();
+            myConn.setDoOutput(true);
+            myConn.setDoInput(true);
+            myConn.setRequestProperty("Content-Type", contentStr);
+            myConn.setUseCaches(false);
+            //dataStr = "T1=67&T2=88";
+            //this.jTextField3.setText("POST: sending to " + urlStr+" data:"+dataStr);
+            BufferedOutputStream out = new BufferedOutputStream(myConn.getOutputStream());
+            out.write(dataStr.getBytes());//"ACTION=add&NUMPTS=2&DATA=L0001\nL0002");
+            out.close();
+
+            //out.close();
+            String SS = "";
+            int b = -1;
+            
+            String t = "";
+            String a="",c="",d="",e="",f ="";
+            int count =0;
+            is = myConn.getInputStream();
+          while ((b = is.read()) != -1) {
+                if ((char) b == '\r') {
+                    SS += "\n";
+                } else {
+                    SS = SS + (char) b;
+                };
+
+            }
+            
+            f(SS);
+            // this.jTextField1.setText(SS);
+          //  this.jTextArea1.setText(SS);
+          //  this.jTextField1.setText("jsijsoi");
+        } catch (Exception e) {
+            
+          //  System.out.println(e.toString());
+           // this.jTextField2.setText("Faild: exception"+e.toString());
+        }
+
+    }
+     
+     void f(String ra){
+        DefaultTableModel dtm=new DefaultTableModel(0,0);
+        String[] strArray = null;    //empty string array  
+        strArray = ra.split("#"); 
+        int count=0;
+        for(String f:strArray){
+            
+          //  System.out.println("f: "+f);
+            String[] str=null;
+            str=f.split("!");
+            if(count!=0){
+                String table[]={str[0],str[1],str[2],str[3],str[4]};
+            jTable1.setModel(dtm);
+            String header[] = new String[] { "Index", "Source IP", "Source Port","Destination Ip", "Destination Port" };    
+            dtm.setColumnIdentifiers(header);
+            dtm.insertRow(0, new Object[] { table[0],table[1],table[2],table[3],table[4] });
+            }
+            count++;
+        }
+     }
+     
+     static public class HeaderColor extends DefaultTableCellRenderer{
+    public HeaderColor(){
+        setOpaque(true);
+    }
+    @Override
+    public Component getTableCellRendererComponent(JTable mytable, Object value,boolean selected,boolean focused,int row, int column )
+    {
+        Color c=new Color(9,64,91);
+          super.getTableCellRendererComponent(mytable, value, selected, focused, row, column);
+          setBackground(c);
+          setForeground(Color.WHITE);
+          return this;
+}
+
+}
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    // </editor-fold>
+    //end of inner class
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TCP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new TCP().setVisible(true);
+            }
+        });
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Index", "Source IP", "Source Port", "Destination Ip", "Destination Port"
+            }
+        ));
+        jTable1.setSelectionBackground(new java.awt.Color(235, 235, 235));
+        jScrollPane2.setViewportView(jTable1);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel1.setText("TCP Connection Table");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(217, 217, 217)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * @param args the command line arguments
+     */
+   
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    // End of variables declaration//GEN-END:variables
+}
